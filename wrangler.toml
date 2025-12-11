@@ -1,0 +1,6 @@
+name = "editable-map-api"
+main = "./index.js"
+compatibility_date = "2025-12-11"
+
+[vars]
+# 如果你以后要加环境变量，可以在这里加，现在可以留空
