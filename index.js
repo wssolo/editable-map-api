@@ -1,28 +1,39 @@
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
-    const key = "markers"; // 用 KV 模拟数据库（免费）
 
-    if (url.pathname === "/markers") {
-      if (request.method === "GET") {
-        let data = await MY_KV.get(key);
-        const markers = data ? JSON.parse(data) : [];
-        return new Response(JSON.stringify(markers), {
-          headers: { "Content-Type": "application/json; charset=utf-8" },
-        });
-      }
-
-      if (request.method === "POST") {
-        const body = await request.json();
-        let markers = [];
-        const existing = await MY_KV.get(key);
-        if (existing) markers = JSON.parse(existing);
-        markers.push({ lat: body.lat, lng: body.lng });
-        await MY_KV.put(key, JSON.stringify(markers));
-        return new Response("OK", { status: 200 });
-      }
+    // 读取数据
+    if (request.method === "GET") {
+      const data = await env.MAP_DATA.get("markers");
+      return new Response(data || "[]", {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
     }
 
-    return new Response("Not Found", { status: 404 });
-  },
+    // 新增标记
+    if (request.method === "POST") {
+      const body = await request.json();
+      const oldData = await env.MAP_DATA.get("markers");
+      const list = oldData ? JSON.parse(oldData) : [];
+
+      list.push({
+        lat: body.lat,
+        lng: body.lng,
+        text: body.text
+      });
+
+      await env.MAP_DATA.put("markers", JSON.stringify(list));
+
+      return new Response("ok", {
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+
+    return new Response("Not allowed", { status: 405 });
+  }
 };
