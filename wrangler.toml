@@ -6,6 +6,7 @@ compatibility_date = "2024-11-01"
 binding = "MAP_DATA"
 id = "你的_KV_ID"
 
-[[r2_buckets]]
-binding = "PHOTO_BUCKET"
-bucket_name = "map-photos"
+# ====== R2（暂时可不建） ======
+# [[r2_buckets]]
+# binding = "PHOTO_BUCKET"
+# bucket_name = "editable-map-photos"
