@@ -4,7 +4,7 @@ compatibility_date = "2024-11-01"
 
 [[kv_namespaces]]
 binding = "MAP_DATA"
-id = "你的_KV_ID"
+id = "137f1f7265bf4e9a9875bf71ac381de3"
 
 # ====== R2（暂时可不建） ======
 # [[r2_buckets]]
