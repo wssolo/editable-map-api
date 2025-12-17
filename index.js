@@ -127,4 +127,24 @@ export default {
           return new Response("R2 not configured", { status: 501, headers });
         }
 
-        const key = url.pa
+        const key = url.pathname.replace("/photo/", "");
+        const obj = await env.PHOTO_BUCKET.get(key);
+        if (!obj) return new Response("Not found", { status: 404, headers });
+
+        return new Response(obj.body, {
+          headers: {
+            "Content-Type": obj.httpMetadata.contentType,
+            "Cache-Control": "public, max-age=31536000"
+          }
+        });
+      }
+
+      return new Response("Not Found", { status: 404, headers });
+    } catch (e) {
+      return new Response(
+        JSON.stringify({ error: e.message }),
+        { status: 500, headers }
+      );
+    }
+  }
+};
